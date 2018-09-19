@@ -93,8 +93,8 @@ export default class ViewPort extends React.Component<Props, State>
         };
         this.setState({
             zoom: zoom,
-            offsetX: this.state.offsetX - (pos.x - newPos.x) * zoom,
-            offsetY: this.state.offsetY - (pos.y - newPos.y) * zoom
+            offsetX: this.state.offsetX - (pos.x - newPos.x) / zoom,
+            offsetY: this.state.offsetY - (pos.y - newPos.y) / zoom
         });
     }
     render()
