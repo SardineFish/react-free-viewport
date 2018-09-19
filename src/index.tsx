@@ -10,7 +10,7 @@ interface State
 {
     offsetX: number;
     offsetY: number;
-    zoom: number;
+    scale: number;
     drag: boolean;
 }
 class Vector
@@ -31,7 +31,7 @@ export default class ViewPort extends React.Component<Props, State>
         this.state = {
             offsetX: 0,
             offsetY: 0,
-            zoom: 1,
+            scale: 1,
             drag: false
         };
         this.spaceRef = React.createRef<HTMLDivElement>();
@@ -40,9 +40,10 @@ export default class ViewPort extends React.Component<Props, State>
     {
         let element = this.spaceRef.current as HTMLDivElement;
         let rect = element.getBoundingClientRect();
+        let style = getComputedStyle(element);
         return {
-            x: (clientPos.x - rect.left - this.state.offsetX) / this.state.zoom,
-            y: (clientPos.y - rect.top - this.state.offsetY) / this.state.zoom
+            x: (clientPos.x - rect.left - parseFloat(style.paddingLeft as string) - this.state.offsetX) / this.state.scale,
+            y: (clientPos.y - rect.top - parseFloat(style.paddingTop as string) - this.state.offsetY) / this.state.scale
         };
     }
     onMouseDown(e: MouseEvent)
@@ -75,26 +76,21 @@ export default class ViewPort extends React.Component<Props, State>
     }
     onWheel(e: WheelEvent)
     {
-        let element = this.spaceRef.current as HTMLDivElement;
-        let rect = element.getBoundingClientRect();
+        const k = 1.2;
         let pos = this.mousePosition(vec2(e.clientX, e.clientY));
-        let zoom = this.state.zoom;
+        let zoom = 1;
         if (e.deltaY < 0)
         {
-            zoom *= 1.2;
+            zoom = 1.2;
         }
         else if (e.deltaY > 0)
         {
-            zoom /= 1.2;
+            zoom = 1 / 1.2;
         }
-        let newPos = {
-            x: (e.clientX - rect.left - this.state.offsetX) / zoom,
-            y: (e.clientY - rect.top - this.state.offsetY) / zoom
-        };
         this.setState({
-            zoom: zoom,
-            offsetX: this.state.offsetX - (pos.x - newPos.x) / zoom,
-            offsetY: this.state.offsetY - (pos.y - newPos.y) / zoom
+            scale: this.state.scale * zoom,
+            offsetX: this.state.offsetX - (pos.x * this.state.scale * (zoom - 1)),
+            offsetY: this.state.offsetY - (pos.y * this.state.scale * (zoom - 1))
         });
     }
     render()
@@ -116,7 +112,7 @@ export default class ViewPort extends React.Component<Props, State>
                     style={
                         {
                             transformOrigin: "0 0",
-                            transform: `translate(${this.state.offsetX}px, ${this.state.offsetY}px) scale(${this.state.zoom}, ${this.state.zoom})`
+                            transform: `translate(${this.state.offsetX}px, ${this.state.offsetY}px) scale(${this.state.scale}, ${this.state.scale})`
                         }}>
                     {
                         this.props.children
