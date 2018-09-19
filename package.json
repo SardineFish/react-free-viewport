@@ -1,0 +1,25 @@
+{
+  "name": "react-free-viewport",
+  "version": "1.0.0",
+  "description": "A viewport with drag and zoom support.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "npx typescript",
+    "build:watch": "npx typescript -w"
+  },
+  "keywords": [
+    "react",
+    "viewport",
+    "scale",
+    "drag",
+    "move",
+    "zoom"
+  ],
+  "author": "SardineFish",
+  "license": "MIT",
+  "dependencies": {
+    "@types/react": "^16.4.14",
+    "react": "^16.5.2",
+    "typescript": "^3.0.3"
+  }
+}
