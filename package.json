@@ -4,8 +4,12 @@
   "description": "A viewport with drag and zoom support.",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "npx typescript",
-    "build:watch": "npx typescript -w"
+    "build": "npx tsc",
+    "build:watch": "npx tsc -w"
+  },
+  "bugs": {
+    "url": "https://github.com/SardineFish/react-free-viewport/issues",
+    "email": "sardine@live.cn"
   },
   "keywords": [
     "react",
@@ -15,11 +19,17 @@
     "move",
     "zoom"
   ],
+  "repository": {
+    "type": "git",
+    "url": "github:SardineFish/react-free-viewport"
+  },
   "author": "SardineFish",
   "license": "MIT",
   "dependencies": {
     "@types/react": "^16.4.14",
-    "react": "^16.5.2",
+    "react": "^16.5.2"
+  },
+  "devDependencies": {
     "typescript": "^3.0.3"
   }
 }
