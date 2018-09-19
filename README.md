@@ -1,4 +1,6 @@
-A drag and zoom supported viewport.
+A drag and zoom supported viewport. 
+
+Using CSS transform. 
 
 ## Installation
 
@@ -36,3 +38,6 @@ ReactDOM.render(element, $("#root"));
     overflow: hidden;
 }
 ```
+
+**DEMO**
+![](https://cdn-img.sardinefish.com/NTk5NDM5)
