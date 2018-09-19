@@ -1,6 +1,6 @@
 {
   "name": "react-free-viewport",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A viewport with drag and zoom support.",
   "main": "./dist/index.js",
   "scripts": {
