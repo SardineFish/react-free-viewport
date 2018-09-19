@@ -13,7 +13,7 @@ npm install --save react-free-viewport
 ```jsx
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import ViewPort from "../";
+import ViewPort from "react-free-viewport";
 
 const element = (
     <div>
@@ -40,4 +40,5 @@ ReactDOM.render(element, $("#root"));
 ```
 
 **DEMO**
+
 ![](https://cdn-img.sardinefish.com/NTk5NDM5)
