@@ -1,13 +1,9 @@
-import React from "react";
-interface Props
+import React, { HTMLAttributes, MouseEvent, WheelEvent } from "react";
+interface Props extends HTMLAttributes<HTMLDivElement>
 {
-    children?: React.ReactNode;
-    className?: string;
     button?: number;
     scaleFactor?: number;
     grabCursor?: string;
-    id?: string;
-    key?: any;
 }
 interface State
 {
@@ -49,8 +45,10 @@ export default class ViewPort extends React.Component<Props, State>
             y: (clientPos.y - rect.top - parseFloat(style.paddingTop as string) - this.state.offsetY) / this.state.scale
         };
     }
-    onMouseDown(e: MouseEvent)
+    onMouseDown(e: MouseEvent<HTMLDivElement>)
     {
+        if (this.props.onMouseDown)
+            this.props.onMouseDown(e);
         let button = this.props.button === undefined ? 0 : this.props.button;
         if (e.button === button)
         {
@@ -60,8 +58,10 @@ export default class ViewPort extends React.Component<Props, State>
             this.setState({ drag: true });
         }
     }
-    onMouseUp(e: MouseEvent)
+    onMouseUp(e: MouseEvent<HTMLDivElement>)
     {
+        if (this.props.onMouseUp)
+            this.props.onMouseUp(e);
         let button = this.props.button === undefined ? 0 : this.props.button;
         if (e.button === button)
         {
@@ -69,8 +69,10 @@ export default class ViewPort extends React.Component<Props, State>
             this.setState({ drag: false });
         }
     }
-    onMouseMove(e: MouseEvent)
+    onMouseMove(e: MouseEvent<HTMLDivElement>)
     {
+        if (this.props.onMouseMove)
+            this.props.onMouseMove(e);
         if (!this.drag)
             return;
         let dPos: Vector = { x: e.clientX - this.mouseDownPos.x, y: e.clientY - this.mouseDownPos.y };
@@ -79,8 +81,10 @@ export default class ViewPort extends React.Component<Props, State>
             offsetY: this.originalOffset.y + dPos.y
         });
     }
-    onWheel(e: WheelEvent)
+    onWheel(e: WheelEvent<HTMLDivElement>)
     {
+        if (this.props.onWheel)
+            this.props.onWheel(e);
         const scaleFactor = this.props.scaleFactor || 1.2;
         let pos = this.mousePosition(vec2(e.clientX, e.clientY));
         let zoom = 1;
@@ -101,18 +105,22 @@ export default class ViewPort extends React.Component<Props, State>
     render()
     {
         const grabCursor = this.props.grabCursor || "-webkit-grabbing";
+
+        let { className, children, onMouseDown, onMouseUp, onMouseMove, onWheel, style, ...other } = this.props;
+        style = style ? style : {};
+        style.cursor = this.drag ? grabCursor : "inherit";
+        className = className ? [className].concat(["viewport"]).join(" ") : "viewport";
+
         return (
             <div
-                id={this.props.id}
-                className={["viewport"].concat(this.props.className || "").join(" ")}
+                className={className}
                 ref={this.spaceRef}
-                style={{
-                    cursor: this.drag ? grabCursor : "inherit",
-                }}
-                onMouseDown={(e: any) => this.onMouseDown(e)}
-                onMouseUp={(e: any) => this.onMouseUp(e)}
-                onMouseMove={(e: any) => this.onMouseMove(e)}
-                onWheel={(e: any) => this.onWheel(e)}>
+                style={style}
+                onMouseDown={(e) => this.onMouseDown(e)}
+                onMouseUp={(e) => this.onMouseUp(e)}
+                onMouseMove={(e) => this.onMouseMove(e)}
+                onWheel={(e) => this.onWheel(e)}
+                {...other}>
                 <div
                     className="viewport-wrapper"
                     style={
@@ -121,7 +129,7 @@ export default class ViewPort extends React.Component<Props, State>
                             transform: `translate(${this.state.offsetX}px, ${this.state.offsetY}px) scale(${this.state.scale}, ${this.state.scale})`
                         }}>
                     {
-                        this.props.children
+                        children
                     }
                 </div>
 
