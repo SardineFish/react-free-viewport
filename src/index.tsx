@@ -3,6 +3,9 @@ interface Props
 {
     children?: React.ReactNode;
     className?: string;
+    button?: number;
+    scaleFactor?: number;
+    grabCursor?: string;
     id?: string;
     key?: any;
 }
@@ -48,7 +51,8 @@ export default class ViewPort extends React.Component<Props, State>
     }
     onMouseDown(e: MouseEvent)
     {
-        if (e.button === 1)
+        let button = this.props.button === undefined ? 0 : this.props.button;
+        if (e.button === button)
         {
             this.originalOffset = { x: this.state.offsetX, y: this.state.offsetY };
             this.mouseDownPos = { x: e.clientX, y: e.clientY };
@@ -58,7 +62,8 @@ export default class ViewPort extends React.Component<Props, State>
     }
     onMouseUp(e: MouseEvent)
     {
-        if (e.button === 1)
+        let button = this.props.button === undefined ? 0 : this.props.button;
+        if (e.button === button)
         {
             this.drag = false;
             this.setState({ drag: false });
@@ -76,16 +81,16 @@ export default class ViewPort extends React.Component<Props, State>
     }
     onWheel(e: WheelEvent)
     {
-        const k = 1.2;
+        const scaleFactor = this.props.scaleFactor || 1.2;
         let pos = this.mousePosition(vec2(e.clientX, e.clientY));
         let zoom = 1;
         if (e.deltaY < 0)
         {
-            zoom = 1.2;
+            zoom = scaleFactor;
         }
         else if (e.deltaY > 0)
         {
-            zoom = 1 / 1.2;
+            zoom = 1 / scaleFactor;
         }
         this.setState({
             scale: this.state.scale * zoom,
@@ -95,13 +100,14 @@ export default class ViewPort extends React.Component<Props, State>
     }
     render()
     {
+        const grabCursor = this.props.grabCursor || "-webkit-grabbing";
         return (
             <div
                 id={this.props.id}
                 className={["viewport"].concat(this.props.className || "").join(" ")}
                 ref={this.spaceRef}
                 style={{
-                    cursor: this.drag ? "-webkit-grabbing" : "default",
+                    cursor: this.drag ? grabCursor : "inherit",
                 }}
                 onMouseDown={(e: any) => this.onMouseDown(e)}
                 onMouseUp={(e: any) => this.onMouseUp(e)}

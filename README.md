@@ -42,3 +42,14 @@ ReactDOM.render(element, $("#root"));
 **DEMO**
 
 ![](https://cdn-img.sardinefish.com/NTk5NDM5)
+
+
+## Documentation
+
+### Props
+| Name          | Type      | Default   | Description   |
+| ------------- | --------- | --------- | ------------- |
+| button        | number    | `0`       | Indicate which mouse button can be used to drag. `0`: left, `1`: mid, `2`: right
+| scaleFactor   | number    | `1.2`     | The scale factor when the mouse wheel scroll up. If the value is less then 1, the viewport will zoom out when scroll up, and zoom in when scroll down.
+| grabCursor    | string    | `"-webkit-grabbing"`  | The CSS cursor property value while dragging.
+
