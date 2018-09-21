@@ -1,9 +1,11 @@
-import React, { HTMLAttributes, MouseEvent, WheelEvent } from "react";
+import React, { HTMLAttributes, MouseEvent, WheelEvent, Ref,ClassAttributes, RefObject, UIEvent } from "react";
 interface Props extends HTMLAttributes<HTMLDivElement>
 {
     button?: number;
     scaleFactor?: number;
     grabCursor?: string;
+    refobj?: Ref<HTMLDivElement>;
+    key?: string;
 }
 interface State
 {
@@ -23,7 +25,7 @@ export default class ViewPort extends React.Component<Props, State>
     mouseDownPos: Vector = { x: 0, y: 0 };
     originalOffset: Vector = { x: 0, y: 0 };
     drag: boolean = false;
-    spaceRef: React.RefObject<HTMLDivElement>;
+    viewportRef: React.RefObject<HTMLDivElement>;
     constructor(props: Props)
     {
         super(props);
@@ -33,11 +35,11 @@ export default class ViewPort extends React.Component<Props, State>
             scale: 1,
             drag: false
         };
-        this.spaceRef = React.createRef<HTMLDivElement>();
+        this.viewportRef = this.props.refobj? this.props.refobj as RefObject<HTMLDivElement> : React.createRef<HTMLDivElement>();
     }
     mousePosition(clientPos: Vector): Vector
     {
-        let element = this.spaceRef.current as HTMLDivElement;
+        let element = this.viewportRef.current as HTMLDivElement;
         let rect = element.getBoundingClientRect();
         let style = getComputedStyle(element);
         return {
@@ -102,6 +104,10 @@ export default class ViewPort extends React.Component<Props, State>
             offsetY: this.state.offsetY - (pos.y * this.state.scale * (zoom - 1))
         });
     }
+    onScroll(e:UIEvent<HTMLDivElement>)
+    {
+        this.viewportRef.current!.scrollTo(0, 0);
+    }
     render()
     {
         const grabCursor = this.props.grabCursor || "-webkit-grabbing";
@@ -114,12 +120,13 @@ export default class ViewPort extends React.Component<Props, State>
         return (
             <div
                 className={className}
-                ref={this.spaceRef}
+                ref={this.viewportRef}
                 style={style}
                 onMouseDown={(e) => this.onMouseDown(e)}
                 onMouseUp={(e) => this.onMouseUp(e)}
                 onMouseMove={(e) => this.onMouseMove(e)}
                 onWheel={(e) => this.onWheel(e)}
+                onScroll={(e)=>this.onScroll(e)}
                 {...other}>
                 <div
                     className="viewport-wrapper"
