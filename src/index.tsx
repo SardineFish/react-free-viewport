@@ -133,6 +133,8 @@ export default class ViewPort extends React.Component<Props, State>
                     style={
                         {
                             transformOrigin: "0 0",
+                            /*translate: `${this.state.offsetX}px, ${this.state.offsetY}px`,
+                            scale: `${this.state.scale}, ${this.state.scale}`*/
                             transform: `translate(${this.state.offsetX}px, ${this.state.offsetY}px) scale(${this.state.scale}, ${this.state.scale})`
                         }}>
                     {
